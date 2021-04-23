@@ -87,6 +87,7 @@ class Ventana extends JFrame implements ActionListener{
 		lSemestre.setBounds(100,220, 180, 20);
 		add(lSemestre);
 		cSemestre.setBounds(240,220, 210, 20);
+		cSemestre.addItem("0");
 		cSemestre.addItem("1");
 		cSemestre.addItem("2");
 		cSemestre.addItem("3");
@@ -98,6 +99,7 @@ class Ventana extends JFrame implements ActionListener{
 		lCarrera.setBounds(100,250, 180, 20);
 		add(lCarrera);
 		cCarrera.setBounds(240,250, 210, 20);
+		cCarrera.addItem("0");
 		cCarrera.addItem("ISC");
 		cCarrera.addItem("IM");
 		cCarrera.addItem("CP");
@@ -134,8 +136,6 @@ class Ventana extends JFrame implements ActionListener{
 			String carrera = (String) cCarrera.getSelectedItem();
 			int isemestre = Integer.valueOf(semestre);
 			byte bsemestre = (byte)isemestre;
-			
-			
 			//El 21 es la edad, un dato estatico(mi edad) que sera ignorado
 			Alumno a = new Alumno(nControl,nombre,pApellido,sApellido,(byte)21,bsemestre,carrera);
 			AlumnoDAO aDAO = new AlumnoDAO();
@@ -149,7 +149,10 @@ class Ventana extends JFrame implements ActionListener{
 			cSemestre.setSelectedIndex(0);
 			cCarrera.setSelectedIndex(0);
 		}else if(e.getSource()==bCancelar) {
-			dispose();
+			//Se uso setVisible porqie dispose, termina la ejecucucion y esta pensado para ser
+			//Varias ventanas distintas
+			setVisible(false);
+			//dispose();
 		}
 		
 		
