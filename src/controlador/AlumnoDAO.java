@@ -24,5 +24,13 @@ public class AlumnoDAO {
 		return resultado;
 	}
 	
+	public boolean eliminarRegistro(String nc) {
+		boolean resultado = false;
+		
+		String sql = "DELETE FROM Alumnos WHERE NumControl = \""+nc+"\"";
+		resultado = conexion.ejecutarInstruccion(sql);
+		
+		return resultado;
+	}
 	
 }
