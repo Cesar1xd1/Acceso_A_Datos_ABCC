@@ -33,4 +33,19 @@ public class AlumnoDAO {
 		return resultado;
 	}
 	
+	public boolean modificarRegistro(Alumno a) {
+		boolean resultado = false;
+		
+		String sql = "UPDATE alumnos SET nombre='"+a.getNombre()+"', PrimerAp='"+a.getPrimerAp()+"', SegundoAp='"+a.getSegundoAp()+"',"
+                + "              Edad = "+a.getEdad()+", semestre = "+a.getSemestre()+", Carrera = '"+a.getCarrera()+"'"
+                + "                  WHERE NumControl = '"+a.getNumControl()+"';";
+		resultado = conexion.ejecutarInstruccion(sql);
+		
+		return resultado;
+	}
+	
+	
+	
+	
+	
 }
