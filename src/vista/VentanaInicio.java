@@ -14,6 +14,13 @@ import javax.swing.event.AncestorListener;
 import controlador.AlumnoDAO;
 import modelo.Alumno;
 
+
+
+
+
+
+
+
 class VentanaAltas extends JFrame implements ActionListener{
 	JPanel verde = new JPanel();
 	JLabel titulo = new JLabel("Altas Alumnos");
@@ -62,7 +69,7 @@ class VentanaAltas extends JFrame implements ActionListener{
 		getContentPane().setLayout(null);
 		setSize(700,500);
 		setLocationRelativeTo(null);
-		setTitle("Contron Escolar");
+		setTitle("ALTAS ALUMNOS");
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		
 		
@@ -261,7 +268,7 @@ class VentanaBajas extends JFrame implements ActionListener{
 		getContentPane().setLayout(null);
 		setSize(700,500);
 		setLocationRelativeTo(null);
-		setTitle("Contron Escolar");
+		setTitle("BAJAS ALUMNOS");
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		
 		String controlador = "com.mysql.cj.jdbc.Driver";
@@ -503,7 +510,7 @@ class VentanaCambios extends JFrame implements ActionListener{
 		getContentPane().setLayout(null);
 		setSize(700,500);
 		setLocationRelativeTo(null);
-		setTitle("MODIFICACIONEs");
+		setTitle("CAMBIOS ALUMNOS");
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		
 		String controlador = "com.mysql.cj.jdbc.Driver";
@@ -617,7 +624,6 @@ class VentanaCambios extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==bBuscar) {
-			AlumnoDAO aDAO = new AlumnoDAO();
 			String sql = "SELECT * FROM alumnos ";
 			boolean primero=true;
 				if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
@@ -685,6 +691,204 @@ class VentanaCambios extends JFrame implements ActionListener{
 	
 	}	
 	
+}//VENTANA-CAMBIOS
+
+class VentanaConsultas extends JFrame implements ActionListener{
+	JPanel azul = new JPanel();
+	JLabel titulo = new JLabel("Consultas Alumnos");
+	JLabel lNControl = new JLabel("NUMERO DE CONTROL:");
+	JTextField tNControl = new JTextField();
+	JLabel lNombre = new JLabel("NOMBRE:");
+	JTextField tNombre = new JTextField();
+	JLabel lPApellido = new JLabel("APELLIDO PATERNO:");
+	JTextField tPApellido = new JTextField();
+	JLabel lSApellido = new JLabel("APELLIDO MATERNO:");
+	JTextField tSApellido = new JTextField();
+	JLabel lSemestre = new JLabel("SEMESTRE:");
+	JComboBox cSemestre = new JComboBox();
+	JLabel lCarrera = new JLabel("CARRERA:");
+	JComboBox cCarrera = new JComboBox();
+	JButton bBuscar = new JButton();
+	JButton bBorrar = new JButton("BORRAR");
+	JButton bCancelar = new JButton("CANCELAR");
+	JTable tabla = new JTable();
+	ImageIcon iconoBuscar = new ImageIcon("src/recursos/buscar.png");
+	JRadioButton rbNControl = new JRadioButton();
+	JRadioButton rbNombre = new JRadioButton();
+	JRadioButton rbPApellido = new JRadioButton();
+	JRadioButton rbSApellido = new JRadioButton();
+	JRadioButton rbSemestre = new JRadioButton();
+	JRadioButton rbCarrera = new JRadioButton();
+	JRadioButton rbTodos = new JRadioButton("TODOS");
+	JLabel radioB = new JLabel("Seleccione un filtro");
+	
+	
+	ButtonGroup bGrupo = new ButtonGroup();
+	
+	public void atuaclizaTabla(JTable tabla) {
+		try {
+			String controlador = "com.mysql.cj.jdbc.Driver";
+			String url = "jdbc:mysql://localhost:3306/Escuela_Topicos";
+			String Consulta = "SELECT * FROM alumnos";
+			
+			ResultSetTableModel modeloDatos = null;
+			try {
+				modeloDatos = new ResultSetTableModel(controlador, url, Consulta);
+			}catch (ClassNotFoundException ex) {
+				JOptionPane.showMessageDialog(getContentPane(), ex);
+			}
+			tabla.setModel(modeloDatos);
+		}//Try
+		catch (Exception sqle) {
+			JOptionPane.showMessageDialog(getContentPane(), sqle);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	public VentanaConsultas() {
+		getContentPane().setLayout(null);
+		setSize(700,500);
+		setLocationRelativeTo(null);
+		setTitle("CONSULTAS ALUMNOS");
+		setDefaultCloseOperation(HIDE_ON_CLOSE);
+		
+		
+		String controlador = "com.mysql.cj.jdbc.Driver";
+		String url = "jdbc:mysql://localhost:3306/Escuela_Topicos";
+		String Consulta = "SELECT * FROM alumnos";
+		
+		ResultSetTableModel modeloDatos = null;
+		try {
+			modeloDatos = new ResultSetTableModel(controlador, url, Consulta);
+		}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		JScrollPane escroll = new JScrollPane(tabla);
+		tabla.setModel(modeloDatos);
+		
+	
+		setVisible(true);
+		
+		azul.setBackground(new Color(0, 0, 255));
+		azul.setLayout(null);
+		azul.setBounds(0, 0, 700, 70);
+		add(azul);
+		
+		titulo.setFont(new Font("Arial Black", Font.PLAIN, 25));
+		titulo.setForeground(Color.WHITE);
+		titulo.setBounds(20, 20, 300, 20);
+		azul.add(titulo);
+		
+		
+		
+		
+		
+		radioB.setBounds(100, 75, 150, 20);
+		add(radioB);
+		
+		rbTodos.setBounds(50, 100, 100, 20);
+		bGrupo.add(rbTodos);
+		add(rbTodos);
+	
+		rbNControl.setBounds(150,100, 20,20);
+		bGrupo.add(rbNControl);
+		add(rbNControl);
+		lNControl.setBounds(180,100, 180, 20);
+		add(lNControl);
+		tNControl.setBounds(330,100, 200, 20);
+		add(tNControl);
+		
+		rbNombre.setBounds(150,130, 20,20);
+		bGrupo.add(rbNombre);
+		add(rbNombre);
+		lNombre.setBounds(180,130,80, 20);
+		add(lNombre);
+		tNombre.setBounds(250,130, 280, 20);
+		add(tNombre);
+		
+		rbPApellido.setBounds(150,160, 20,20);
+		bGrupo.add(rbPApellido);
+		add(rbPApellido);
+		lPApellido.setBounds(180,160, 180, 20);
+		add(lPApellido);
+		tPApellido.setBounds(320,160, 210, 20);
+		add(tPApellido);
+		
+
+		rbSApellido.setBounds(150,190, 20,20);
+		bGrupo.add(rbSApellido);
+		add(rbSApellido);
+		lSApellido.setBounds(180,190, 180, 20);
+		add(lSApellido);
+		tSApellido.setBounds(320,190, 210, 20);
+		add(tSApellido);
+		
+		
+
+		rbSemestre.setBounds(150,220, 20,20);
+		bGrupo.add(rbSemestre);
+		add(rbSemestre);
+		lSemestre.setBounds(180,220, 180, 20);
+		add(lSemestre);
+		cSemestre.setBounds(320,220, 210, 20);
+		cSemestre.addItem("0");
+		cSemestre.addItem("1");
+		cSemestre.addItem("2");
+		cSemestre.addItem("3");
+		cSemestre.addItem("4");
+		cSemestre.addItem("5");
+		cSemestre.addItem("6");
+		add(cSemestre);
+		
+		
+
+		rbCarrera.setBounds(150,250, 20,20);
+		bGrupo.add(rbCarrera);
+		add(rbCarrera);
+		lCarrera.setBounds(180,250, 180, 20);
+		add(lCarrera);
+		cCarrera.setBounds(320,250, 210, 20);
+		cCarrera.addItem("0");
+		cCarrera.addItem("ISC");
+		cCarrera.addItem("IM");
+		cCarrera.addItem("CP");
+		cCarrera.addItem("IA");
+		cCarrera.addItem("LA");
+		add(cCarrera);
+		
+		bBuscar.setBounds(560,110 , 100, 35);
+		bBuscar.addActionListener(this);
+		bBuscar.setIcon(iconoBuscar);
+		add(bBuscar);
+		
+		bBorrar.setBounds(560,170 , 100, 20);
+		bBorrar.addActionListener(this);
+		add(bBorrar);
+		
+		bCancelar.setBounds(560,220 , 100, 20);
+		bCancelar.addActionListener(this);
+		add(bCancelar);
+		
+		escroll.setBounds(90, 320, 500, 100);
+		add(escroll);
+		
+		
+		
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 
@@ -719,6 +923,7 @@ class VentanaPrincipal extends JFrame{
 			controlAlumnos.add(altas);
 			controlAlumnos.add(bajas);
 			controlAlumnos.add(cambios);
+			controlAlumnos.add(consultas);
 		menuBar.add(controlAlumnos);
 		setJMenuBar(menuBar);
 		
@@ -728,12 +933,6 @@ class VentanaPrincipal extends JFrame{
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						new VentanaAltas();
-						
-						
-						
-						
-						
-						
 					}
 				});
 			}
@@ -762,6 +961,16 @@ class VentanaPrincipal extends JFrame{
 			}
 		});
 	
+		consultas.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						new VentanaConsultas();
+					}
+				});
+			}
+		});
 		
 		
 	}
