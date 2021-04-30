@@ -14,7 +14,7 @@ public class ConexionBD {
 			String URL = "jdbc:mysql://localhost:3306/Escuela_Topicos";
 			
 			//La contraseña del profe                        ===v
-			conexion = DriverManager.getConnection(URL,"root","CSRxd123");
+			conexion = DriverManager.getConnection(URL,"root","itsj");
 		
 			System.out.println("Conexion establecida!!");
 			

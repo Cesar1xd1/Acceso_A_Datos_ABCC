@@ -12,15 +12,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 
 import controlador.AlumnoDAO;
-import jdk.tools.jimage.resources.jimage;
 import modelo.Alumno;
-
-
-
-
-
-
-
 
 class VentanaAltas extends JFrame implements ActionListener{
 	JPanel verde = new JPanel();
@@ -61,11 +53,7 @@ class VentanaAltas extends JFrame implements ActionListener{
 		}
 	}
 	
-	
-	
-	
-	
-	
+
 	public VentanaAltas() {
 		getContentPane().setLayout(null);
 		setSize(700,500);
@@ -174,6 +162,7 @@ class VentanaAltas extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==bAgregar) {
+			int x = 1;
 			String nControl = tNControl.getText();
 			String nombre = tNombre.getText();
 			String pApellido = tPApellido.getText();
@@ -182,11 +171,23 @@ class VentanaAltas extends JFrame implements ActionListener{
 			String carrera = (String) cCarrera.getSelectedItem();
 			int isemestre = Integer.valueOf(semestre);
 			byte bsemestre = (byte)isemestre;
+			if(semestre.equals("0")) {
+				JOptionPane.showMessageDialog(null, "Ingrese un Cemestre Valido");
+				x = 0;
+			}
+			if(carrera.equals("0")) {
+				JOptionPane.showMessageDialog(null, "Ingrese una Carrera Valida");
+				x = 0;
+			}
+			
 			//Se insertara siempre una edad de 0 
-			Alumno a = new Alumno(nControl,nombre,pApellido,sApellido,(byte)0,bsemestre,carrera);
-			AlumnoDAO aDAO = new AlumnoDAO();
-			aDAO.insertarRegistro(a);
-			atuaclizaTabla(tabla);
+			if(x==1) {
+				Alumno a = new Alumno(nControl,nombre,pApellido,sApellido,(byte)0,bsemestre,carrera);
+				AlumnoDAO aDAO = new AlumnoDAO();
+				aDAO.insertarRegistro(a);
+				atuaclizaTabla(tabla);
+			}
+			
 		}else if(e.getSource()==bBorrar) {
 			tNControl.setText("");
 			tNombre.setText("");
@@ -481,9 +482,6 @@ class VentanaCambios extends JFrame implements ActionListener{
 	}
 
 	
-	
-	
-	
 	public VentanaCambios() {
 		getContentPane().setLayout(null);
 		setSize(700,500);
@@ -506,10 +504,7 @@ class VentanaCambios extends JFrame implements ActionListener{
 		
 		JScrollPane escroll = new JScrollPane(tabla);
 		tabla.setModel(modeloDatos);
-		
-		
-		
-		
+
 		setVisible(true);
 		
 		naranja.setBackground(new Color(255, 200, 0));
@@ -594,9 +589,7 @@ class VentanaCambios extends JFrame implements ActionListener{
 		tabla.addMouseListener(new java.awt.event.MouseAdapter() {@Override public void mouseClicked(java.awt.event.MouseEvent evt) { obtenerRegistroTabla();}         });
 		escroll.setBounds(90, 350, 500, 100);
 		add(escroll);
-		
-		
-		
+
 	}
 
 	@Override
@@ -610,9 +603,6 @@ class VentanaCambios extends JFrame implements ActionListener{
 			
 				atuaclizaTabla(sql);
 				
-			
-			
-			
 			
 		}else if(e.getSource()==bBorrar) {
 			tNControl.setText("");
@@ -697,7 +687,6 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		}
 	}
 	
-	
 	public void blanquear() {
 		tNControl.setText("");
 		tNombre.setText("");
@@ -706,8 +695,6 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		cSemestre.setSelectedIndex(0);
 		cCarrera.setSelectedIndex(0);
 	}
-	
-	
 	
 	public VentanaConsultas() {
 		getContentPane().setLayout(null);
@@ -748,9 +735,6 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		
 		rbTodos.setSelected(true);
 		
-		
-		
-		
 		radioB.setBounds(100, 75, 150, 20);
 		add(radioB);
 		
@@ -769,7 +753,6 @@ class VentanaConsultas extends JFrame implements ActionListener{
 			}
 		});
 		
-	
 		rbNControl.setBounds(150,100, 20,20);
 		bGrupo.add(rbNControl);
 		add(rbNControl);
@@ -785,7 +768,6 @@ class VentanaConsultas extends JFrame implements ActionListener{
 				blanquear();
 			}
 		});
-		
 		
 		lNControl.setBounds(180,100, 180, 20);
 		add(lNControl);
@@ -829,13 +811,11 @@ class VentanaConsultas extends JFrame implements ActionListener{
 			}
 		});
 		
-		
 		lPApellido.setBounds(180,160, 180, 20);
 		add(lPApellido);
 		tPApellido.setBounds(320,160, 210, 20);
 		add(tPApellido);
 		
-
 		rbSApellido.setBounds(150,190, 20,20);
 		bGrupo.add(rbSApellido);
 		add(rbSApellido);
@@ -857,8 +837,6 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		tSApellido.setBounds(320,190, 210, 20);
 		add(tSApellido);
 		
-		
-
 		rbSemestre.setBounds(150,220, 20,20);
 		bGrupo.add(rbSemestre);
 		add(rbSemestre);
@@ -886,8 +864,6 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		cSemestre.addItem("6");
 		add(cSemestre);
 		
-		
-
 		rbCarrera.setBounds(150,250, 20,20);
 		bGrupo.add(rbCarrera);
 		add(rbCarrera);
@@ -903,9 +879,7 @@ class VentanaConsultas extends JFrame implements ActionListener{
 				blanquear();
 			}
 		});
-		
-		
-		
+	
 		lCarrera.setBounds(180,250, 180, 20);
 		add(lCarrera);
 		cCarrera.setBounds(320,250, 210, 20);
@@ -932,10 +906,7 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		
 		escroll.setBounds(90, 320, 500, 100);
 		add(escroll);
-		
-		
-		
-		
+	
 	}
 	
 	@Override
@@ -1009,10 +980,6 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		}
 	}
 }
-
-
-
-
 
 class VentanaPrincipal extends JFrame{
 	JMenuBar menuBar;
@@ -1100,18 +1067,11 @@ class VentanaPrincipal extends JFrame{
 				});
 			}
 		});
-		
-		
-		
-		
-		
+
 	}
 	
 	
 }//VENTANA
-
-
-
 
 public class VentanaInicio {
 
@@ -1122,10 +1082,6 @@ public class VentanaInicio {
 				new VentanaPrincipal();
 			}
 		});
-		
-		
-		
-
 	}
 
 }
