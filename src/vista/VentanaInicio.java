@@ -12,6 +12,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 
 import controlador.AlumnoDAO;
+import jdk.tools.jimage.resources.jimage;
 import modelo.Alumno;
 
 
@@ -181,8 +182,8 @@ class VentanaAltas extends JFrame implements ActionListener{
 			String carrera = (String) cCarrera.getSelectedItem();
 			int isemestre = Integer.valueOf(semestre);
 			byte bsemestre = (byte)isemestre;
-			//El 21 es la edad, un dato estatico(mi edad) que sera ignorado
-			Alumno a = new Alumno(nControl,nombre,pApellido,sApellido,(byte)21,bsemestre,carrera);
+			//Se insertara siempre una edad de 0 
+			Alumno a = new Alumno(nControl,nombre,pApellido,sApellido,(byte)0,bsemestre,carrera);
 			AlumnoDAO aDAO = new AlumnoDAO();
 			aDAO.insertarRegistro(a);
 			atuaclizaTabla(tabla);
@@ -386,38 +387,13 @@ class VentanaBajas extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==bBuscar) {
-			AlumnoDAO aDAO = new AlumnoDAO();
+			
 			String sql = "SELECT * FROM alumnos ";
 			boolean primero=true;
 				if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
 				primero=false;
 				sql+=("NumControl = '"+tNControl.getText()+"'");
-				if (!tNombre.getText().equals("")) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("Nombre ='"+tNombre.getText()+"'");
-				}
-				if (!tPApellido.getText().equals("")) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("PrimerAp ='"+tPApellido.getText()+"'");
-				}
-				if (!tSApellido.getText().equals("")) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("SegundoAP ='"+tSApellido.getText()+"'");
-				}
-				
-				if (cSemestre.getSelectedIndex()!=0) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("Semestre ="+cSemestre.getSelectedItem());
-				}
-				if (cCarrera.getSelectedIndex()!=0) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("Carrera ='"+cCarrera.getSelectedItem()+"'");
-				}
+			
 				atuaclizaTabla(sql);
 				
 			
@@ -503,6 +479,8 @@ class VentanaCambios extends JFrame implements ActionListener{
 		}
 		
 	}
+
+	
 	
 	
 	
@@ -629,32 +607,7 @@ class VentanaCambios extends JFrame implements ActionListener{
 				if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
 				primero=false;
 				sql+=("NumControl = '"+tNControl.getText()+"'");
-				if (!tNombre.getText().equals("")) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("Nombre ='"+tNombre.getText()+"'");
-				}
-				if (!tPApellido.getText().equals("")) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("PrimerAp ='"+tPApellido.getText()+"'");
-				}
-				if (!tSApellido.getText().equals("")) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("SegundoAP ='"+tSApellido.getText()+"'");
-				}
-				
-				if (cSemestre.getSelectedIndex()!=0) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("Semestre ="+cSemestre.getSelectedItem());
-				}
-				if (cCarrera.getSelectedIndex()!=0) {
-					if (!primero) {sql+=" AND ";}else {sql+="WHERE ";}
-					primero=false;
-					sql+=("Carrera ='"+cCarrera.getSelectedItem()+"'");
-				}
+			
 				atuaclizaTabla(sql);
 				
 			
@@ -725,15 +678,15 @@ class VentanaConsultas extends JFrame implements ActionListener{
 	
 	ButtonGroup bGrupo = new ButtonGroup();
 	
-	public void atuaclizaTabla(JTable tabla) {
+	public void atuaclizaTabla(String sql) {
 		try {
 			String controlador = "com.mysql.cj.jdbc.Driver";
 			String url = "jdbc:mysql://localhost:3306/Escuela_Topicos";
-			String Consulta = "SELECT * FROM alumnos";
+			
 			
 			ResultSetTableModel modeloDatos = null;
 			try {
-				modeloDatos = new ResultSetTableModel(controlador, url, Consulta);
+				modeloDatos = new ResultSetTableModel(controlador, url, sql);
 			}catch (ClassNotFoundException ex) {
 				JOptionPane.showMessageDialog(getContentPane(), ex);
 			}
@@ -745,7 +698,14 @@ class VentanaConsultas extends JFrame implements ActionListener{
 	}
 	
 	
-	
+	public void blanquear() {
+		tNControl.setText("");
+		tNombre.setText("");
+		tPApellido.setText("");
+		tSApellido.setText("");
+		cSemestre.setSelectedIndex(0);
+		cCarrera.setSelectedIndex(0);
+	}
 	
 	
 	
@@ -786,6 +746,7 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		titulo.setBounds(20, 20, 300, 20);
 		azul.add(titulo);
 		
+		rbTodos.setSelected(true);
 		
 		
 		
@@ -796,10 +757,36 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		rbTodos.setBounds(50, 100, 100, 20);
 		bGrupo.add(rbTodos);
 		add(rbTodos);
+		rbTodos.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tNControl.setEnabled(true);
+				tNombre.setEnabled(true);
+				tPApellido.setEnabled(true);
+				tSApellido.setEnabled(true);
+				cSemestre.setEnabled(true);
+				cCarrera.setEnabled(true);
+			}
+		});
+		
 	
 		rbNControl.setBounds(150,100, 20,20);
 		bGrupo.add(rbNControl);
 		add(rbNControl);
+		rbNControl.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tNControl.setEnabled(true);
+				tNombre.setEnabled(false);
+				tPApellido.setEnabled(false);
+				tSApellido.setEnabled(false);
+				cSemestre.setEnabled(false);
+				cCarrera.setEnabled(false);
+				blanquear();
+			}
+		});
+		
+		
 		lNControl.setBounds(180,100, 180, 20);
 		add(lNControl);
 		tNControl.setBounds(330,100, 200, 20);
@@ -808,6 +795,19 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		rbNombre.setBounds(150,130, 20,20);
 		bGrupo.add(rbNombre);
 		add(rbNombre);
+		rbNombre.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tNControl.setEnabled(false);
+				tNombre.setEnabled(true);
+				tPApellido.setEnabled(false);
+				tSApellido.setEnabled(false);
+				cSemestre.setEnabled(false);
+				cCarrera.setEnabled(false);
+				blanquear();
+			}
+		});
+		
 		lNombre.setBounds(180,130,80, 20);
 		add(lNombre);
 		tNombre.setBounds(250,130, 280, 20);
@@ -816,6 +816,20 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		rbPApellido.setBounds(150,160, 20,20);
 		bGrupo.add(rbPApellido);
 		add(rbPApellido);
+		rbPApellido.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tNControl.setEnabled(false);
+				tNombre.setEnabled(false);
+				tPApellido.setEnabled(true);
+				tSApellido.setEnabled(false);
+				cSemestre.setEnabled(false);
+				cCarrera.setEnabled(false);
+				blanquear();
+			}
+		});
+		
+		
 		lPApellido.setBounds(180,160, 180, 20);
 		add(lPApellido);
 		tPApellido.setBounds(320,160, 210, 20);
@@ -825,6 +839,19 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		rbSApellido.setBounds(150,190, 20,20);
 		bGrupo.add(rbSApellido);
 		add(rbSApellido);
+		rbSApellido.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tNControl.setEnabled(false);
+				tNombre.setEnabled(false);
+				tPApellido.setEnabled(false);
+				tSApellido.setEnabled(true);
+				cSemestre.setEnabled(false);
+				cCarrera.setEnabled(false);
+				blanquear();
+			}
+		});
+		
 		lSApellido.setBounds(180,190, 180, 20);
 		add(lSApellido);
 		tSApellido.setBounds(320,190, 210, 20);
@@ -835,6 +862,18 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		rbSemestre.setBounds(150,220, 20,20);
 		bGrupo.add(rbSemestre);
 		add(rbSemestre);
+		rbSemestre.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tNControl.setEnabled(false);
+				tNombre.setEnabled(false);
+				tPApellido.setEnabled(false);
+				tSApellido.setEnabled(false);
+				cSemestre.setEnabled(true);
+				cCarrera.setEnabled(false);
+				blanquear();
+			}
+		});
 		lSemestre.setBounds(180,220, 180, 20);
 		add(lSemestre);
 		cSemestre.setBounds(320,220, 210, 20);
@@ -852,6 +891,21 @@ class VentanaConsultas extends JFrame implements ActionListener{
 		rbCarrera.setBounds(150,250, 20,20);
 		bGrupo.add(rbCarrera);
 		add(rbCarrera);
+		rbCarrera.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tNControl.setEnabled(false);
+				tNombre.setEnabled(false);
+				tPApellido.setEnabled(false);
+				tSApellido.setEnabled(false);
+				cSemestre.setEnabled(false);
+				cCarrera.setEnabled(true);
+				blanquear();
+			}
+		});
+		
+		
+		
 		lCarrera.setBounds(180,250, 180, 20);
 		add(lCarrera);
 		cCarrera.setBounds(320,250, 210, 20);
@@ -886,8 +940,73 @@ class VentanaConsultas extends JFrame implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if(e.getSource()==bBuscar) {
+			String sql = "SELECT * FROM Alumnos";
+			if(rbNControl.isSelected()) {
+				if(tNControl.getText().equals("")) {
+					JOptionPane.showMessageDialog(null,"Ingresa un # de Control a Consultar");
+				}else {
+				sql = sql + (" WHERE NumControl = '"+tNControl.getText()+"'");
+				atuaclizaTabla(sql);
+				blanquear();
+				}
+			}else if(rbNombre.isSelected()) {
+				if(tNombre.getText().equals("")) {
+					JOptionPane.showMessageDialog(null,"Ingresa un Nombre a Consultar");
+				}else {
+				sql = sql + (" WHERE Nombre ='"+tNombre.getText()+"'");
+				atuaclizaTabla(sql);
+				blanquear();
+				}
+			}else if(rbPApellido.isSelected()) {
+				if(tPApellido.getText().equals("")) {
+					JOptionPane.showMessageDialog(null,"Ingresa un Primer Apellido a Consultar");
+				}else {
+				sql = sql + (" WHERE PrimerAp ='"+tPApellido.getText()+"'");
+				atuaclizaTabla(sql);
+				blanquear();
+				}
+			}else if(rbSApellido.isSelected()) {
+				if(tSApellido.getText().equals("")) {
+					JOptionPane.showMessageDialog(null,"Ingresa un Segundo Apellido a Consultar");
+				}else {
+				sql = sql + (" WHERE SegundoAP ='"+tSApellido.getText()+"'");
+				atuaclizaTabla(sql);
+				blanquear();
+				}
+			}else if(rbSemestre.isSelected()) {
+				if(cSemestre.getSelectedIndex()==0) {
+					JOptionPane.showMessageDialog(null,"Selecciona un Semestre valido a Consultar");
+				}else {
+				sql = sql + (" WHERE Semestre ='"+cSemestre.getSelectedItem()+"'");
+				atuaclizaTabla(sql);
+				blanquear();
+				}
+			}else if(rbCarrera.isSelected()) {
+				if(cCarrera.getSelectedIndex()==0) {
+					JOptionPane.showMessageDialog(null,"Selecciona una Carrera valido a Consultar");
+				}else {
+				sql = sql +  (" WHERE Carrera ='"+cCarrera.getSelectedItem()+"'");
+				atuaclizaTabla(sql);
+				blanquear();
+				}
+		}else if(rbTodos.isSelected()) {
+			if(tNControl.getText().equals("")||tNombre.getText().equals("")||tPApellido.getText().equals("")||tSApellido.getText().equals("")||cSemestre.getSelectedIndex()==0||cCarrera.getSelectedIndex()==0) {
+				JOptionPane.showMessageDialog(null,"Llene todos los filtros para proceder con la consulta");
+			}else {
+				sql = sql + (" WHERE NumControl = '"+tNControl.getText()+"'") + (" AND Nombre ='"+tNombre.getText()+"'") 
+						+ (" AND PrimerAp ='"+tPApellido.getText()+"'") + (" AND SegundoAP ='"+tSApellido.getText()+"'")
+						+(" AND Semestre ='"+cSemestre.getSelectedItem()+"'") + (" AND Carrera ='"+cCarrera.getSelectedItem()+"'");
+					atuaclizaTabla(sql);
+					blanquear();
+			}
+		}
 		
+		}else if(e.getSource()==bBorrar) {
+			blanquear();
+		}else if(e.getSource()==bCancelar) {
+			setVisible(false);
+		}
 	}
 }
 
@@ -911,15 +1030,25 @@ class VentanaPrincipal extends JFrame{
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setTitle("Menu");
+		setBackground(new Color(0, 0, 0));
+		this.getContentPane().setBackground(new Color(192, 192, 192));
 		
 		setVisible(true);
 		
+		JLabel bienvenido = new JLabel("Bienvenido");
+		
+		
+		bienvenido.setFont(new Font("Arial Black", Font.PLAIN, 40));
+		bienvenido.setBounds(220,150,500,35);
+		add(bienvenido);
+		
+		
 		menuBar = new JMenuBar();
-			controlAlumnos = new JMenu("Control de Alumnos");
-				altas = new JMenuItem("Altas Alumnos");
-				bajas = new JMenuItem("Bajas Alumnos");
-				cambios = new JMenuItem("Modificaciones Alumnos");
-				consultas = new JMenuItem("Consultas Alumnos");
+			controlAlumnos = new JMenu("Alumnos");
+				altas = new JMenuItem("Altas");
+				bajas = new JMenuItem("Bajas");
+				cambios = new JMenuItem("Modificaciones");
+				consultas = new JMenuItem("Consultas");
 			controlAlumnos.add(altas);
 			controlAlumnos.add(bajas);
 			controlAlumnos.add(cambios);
@@ -971,6 +1100,9 @@ class VentanaPrincipal extends JFrame{
 				});
 			}
 		});
+		
+		
+		
 		
 		
 	}
