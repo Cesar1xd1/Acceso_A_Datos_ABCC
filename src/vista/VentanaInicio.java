@@ -240,7 +240,8 @@ class VentanaBajas extends JFrame implements ActionListener{
 		tNombre.setText((String) tabla.getValueAt(tabla.getSelectedRow(), 1));
 		tPApellido.setText((String) tabla.getValueAt(tabla.getSelectedRow(), 2));
 		tSApellido.setText((String) tabla.getValueAt(tabla.getSelectedRow(), 3));
-		cSemestre.setSelectedItem(tabla.getValueAt(tabla.getSelectedRow(), 5));
+		int x = (int) tabla.getValueAt(tabla.getSelectedRow(), 5);
+		cSemestre.setSelectedIndex((byte)x);
 		cCarrera.setSelectedItem((String) tabla.getValueAt(tabla.getSelectedRow(), 6));
 		
 		
@@ -455,7 +456,8 @@ class VentanaCambios extends JFrame implements ActionListener{
 		tNombre.setText((String) tabla.getValueAt(tabla.getSelectedRow(), 1));
 		tPApellido.setText((String) tabla.getValueAt(tabla.getSelectedRow(), 2));
 		tSApellido.setText((String) tabla.getValueAt(tabla.getSelectedRow(), 3));
-		cSemestre.setSelectedItem(tabla.getValueAt(tabla.getSelectedRow(), 5));
+		int x = (int) tabla.getValueAt(tabla.getSelectedRow(), 5);
+		cSemestre.setSelectedIndex((byte)x);
 		cCarrera.setSelectedItem((String) tabla.getValueAt(tabla.getSelectedRow(), 6));
 		
 		
@@ -614,6 +616,7 @@ class VentanaCambios extends JFrame implements ActionListener{
 		}else if(e.getSource()==bCancelar) {
 			setVisible(false);
 		}else if(e.getSource()==bCambios) {
+			int x = 1;
 			String nC = tNControl.getText();
 			AlumnoDAO aDAO = new AlumnoDAO();
 			String nombre = tNombre.getText();
@@ -623,10 +626,23 @@ class VentanaCambios extends JFrame implements ActionListener{
 			String carrera = (String) cCarrera.getSelectedItem();
 			int isemestre = Integer.valueOf(semestre);
 			byte bsemestre = (byte)isemestre;
+			if(semestre.equals("0")) {
+				JOptionPane.showMessageDialog(null, "Ingrese un Semestre Valido");
+				x = 0;
+			}
+			if(carrera.equals("0")) {
+				JOptionPane.showMessageDialog(null, "Ingrese una Carrera Valida");
+				x = 0;
+			}
 			
-			Alumno a = new Alumno(nC,nombre,pAp,sAp,(byte)21,bsemestre,carrera);
-			aDAO.modificarRegistro(a);
-			atuaclizaTabla("SELECT * FROM alumnos");
+			//Se insertara siempre una edad de 0 
+			if(x==1) {
+				Alumno a = new Alumno(nC,nombre,pAp,sAp,(byte)0,bsemestre,carrera);
+				aDAO.modificarRegistro(a);
+				atuaclizaTabla("SELECT * FROM alumnos");
+			}
+			
+			
 		
 			
 		}

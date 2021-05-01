@@ -15,10 +15,6 @@ public class ConexionBD {
 			
 			//La contraseña del profe                        ===v
 			conexion = DriverManager.getConnection(URL,"root","itsj");
-		
-			System.out.println("Conexion establecida!!");
-			
-			
 		} catch (ClassNotFoundException e) {
 			System.out.println("Error de DRIVER");
 		} catch (SQLException throwables) {
