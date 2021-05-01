@@ -172,7 +172,7 @@ class VentanaAltas extends JFrame implements ActionListener{
 			int isemestre = Integer.valueOf(semestre);
 			byte bsemestre = (byte)isemestre;
 			if(semestre.equals("0")) {
-				JOptionPane.showMessageDialog(null, "Ingrese un Cemestre Valido");
+				JOptionPane.showMessageDialog(null, "Ingrese un Semestre Valido");
 				x = 0;
 			}
 			if(carrera.equals("0")) {
